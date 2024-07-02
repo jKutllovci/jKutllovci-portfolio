@@ -7,18 +7,24 @@ import axios from 'axios';
 const ContactSection = styled.section`
   padding: 40px 0;
   text-align: center;
-  background-color: #293D38; 
+  background-color: #293D38;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
   input, textarea {
     margin-bottom: 10px;
     padding: 10px;
-    width: 300px;
+    width: 100%;
     border: 1px solid #fff;
     border-radius: 5px;
     background-color: #111;
@@ -29,10 +35,15 @@ const Form = styled.form`
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #2F9F84;  /* Updated button color */
+    background-color: #2F9F84;
     color: #000;
     font-size: 16px;
     cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #27A97D;
+    }
   }
 `;
 
@@ -40,9 +51,10 @@ const SocialIcons = styled.div`
   margin-top: 20px;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 
   a {
-    margin: 0 15px;
+    margin: 10px;
     color: #fff;
     font-size: 32px;
     transition: color 0.3s;
@@ -55,8 +67,21 @@ const SocialIcons = styled.div`
 
 const Message = styled.p`
   margin-top: 20px;
-  color: ${props => props.$success ? '#2F9F84' : '#ff6347'};  /* Green for success, red for error */
+  color: ${props => props.$success ? '#2F9F84' : '#ff6347'};
   font-size: 18px;
+`;
+
+const ContactFooter = styled.footer`
+  padding: 20px;
+  background-color: #111;
+  color: #fff;
+  text-align: center;
+  margin-top: 20px;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
 `;
 
 const Contact = () => {
@@ -84,7 +109,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3001/api/message ', formData);
+      await axios.post('http://localhost:3001/api/message', formData);
       setFeedback({ message: 'Message sent successfully!', success: true });
       setFormData({ name: '', email: '', message: '', rating: 0 });
     } catch (error) {
@@ -127,7 +152,7 @@ const Contact = () => {
             count={5}
             onChange={handleRatingChange}
             size={24}
-            color2={'#ffd700'} 
+            color2={'#ffd700'}
             value={formData.rating}
           />
         </div>
@@ -159,6 +184,9 @@ const Contact = () => {
           <FaPhone />
         </a>
       </SocialIcons>
+      <ContactFooter>
+        <p>&copy; {new Date().getFullYear()} Jon Kutllovci. All Rights Reserved.</p>
+      </ContactFooter>
     </ContactSection>
   );
 };
