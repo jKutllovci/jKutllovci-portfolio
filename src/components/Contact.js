@@ -109,7 +109,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3001/api/message', formData);
+      await axios.post('/api/contact', formData);
       setFeedback({ message: 'Message sent successfully!', success: true });
       setFormData({ name: '', email: '', message: '', rating: 0 });
     } catch (error) {
@@ -117,6 +117,7 @@ const Contact = () => {
       setFeedback({ message: 'There was an error sending your message. Please try again.', success: false });
     }
   };
+  
 
   return (
     <ContactSection id="contact">

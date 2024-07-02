@@ -33,9 +33,10 @@ const SkillItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  justify-content: center;
+  padding-bottom: 20px;
   border-radius: 10px;
-  margin: 20px;
+  margin-bottom: 20px;
 
   img {
     width: 200px;
@@ -43,6 +44,7 @@ const SkillItem = styled.div`
     filter: grayscale(100%);
     transition: filter 0.3s, transform 0.3s;
     margin-bottom: 10px;
+    margin: 0 auto; /* Center the image horizontally */
 
     &:hover {
       filter: grayscale(0%);
@@ -51,8 +53,6 @@ const SkillItem = styled.div`
 
   p {
     margin-top: 10px;
-    width: 200px;
-    text-align: center;
     color: #FFFFFF;
     font-weight: bold;
   }
@@ -64,14 +64,10 @@ const SkillItem = styled.div`
     }
 
     p {
-      width: 150px;
+      font-size: 16px;
     }
 
-    margin: auto; /* Center the SkillItem on smaller screens */
-
-    &:hover {
-      filter: grayscale(0%);
-    }
+    margin: 0 auto; /* Center the SkillItem on smaller screens */
   }
 `;
 
@@ -85,7 +81,6 @@ const CustomSlider = styled(Slider)`
     color: #FFFFFF;
   }
 
-  /* Center the slider content */
   .slick-list {
     display: flex;
     justify-content: center;

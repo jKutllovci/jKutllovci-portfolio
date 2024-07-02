@@ -109,7 +109,7 @@ const Welcome = ({ onClose }) => {
     const intervalId = drawMatrix();
 
     const textAnimation = () => {
-      const message = "Welcome to Jon Kutllovci's Page";
+      const message = "Welcome to Jon Kutllovci's Portfolio!";
       let displayText = '';
       let currentIndex = 0;
 
