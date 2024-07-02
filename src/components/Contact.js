@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaLinkedin, FaInstagram, FaFacebook, FaYoutube, FaEnvelope, FaGithub, FaPhone } from 'react-icons/fa';
 import ReactStars from 'react-stars';
-import axios from 'axios';
+import { database } from '../config/firebaseConfig';
+import { ref, push, set } from 'firebase/database';
 
 const ContactSection = styled.section`
   padding: 40px 0;
@@ -109,7 +110,8 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/contact', formData);
+      const newMessageRef = push(ref(database, 'messages'));
+      await set(newMessageRef, formData);
       setFeedback({ message: 'Message sent successfully!', success: true });
       setFormData({ name: '', email: '', message: '', rating: 0 });
     } catch (error) {
@@ -117,7 +119,6 @@ const Contact = () => {
       setFeedback({ message: 'There was an error sending your message. Please try again.', success: false });
     }
   };
-  
 
   return (
     <ContactSection id="contact">
