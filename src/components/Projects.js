@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 const ProjectsSection = styled.section`
   padding: 40px 0;
@@ -46,10 +46,19 @@ const ProjectItem = styled.div`
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   margin-bottom: 30px; /* Space between items */
   animation: ${floatAnimation} 3s ease infinite;
+  animation-delay: ${({ delay }) => `${delay}s`}; /* Staggered animation delay */
 
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Increase shadow on hover */
+  }
+
+  &:hover ~ div {
+    transform: translateX(20px);
+  }
+
+  &:hover ~ div:hover {
+    transform: translateX(0);
   }
 
   h3 {
@@ -102,7 +111,7 @@ const Projects = () => {
       <ProjectList>
         {/* Render GitHub projects */}
         {githubProjects.map((project, index) => (
-          <ProjectItem key={`github-${index}`}>
+          <ProjectItem key={`github-${index}`} delay={index * 0.2}>
             <a href={project.html_url} target="_blank" rel="noopener noreferrer">
               <h3>{project.name}</h3>
             </a>
@@ -112,7 +121,7 @@ const Projects = () => {
 
         {/* Render manual projects */}
         {manualProjects.map((project, index) => (
-          <ProjectItem key={`manual-${index}`}>
+          <ProjectItem key={`manual-${index}`} delay={index * 0.2}>
             <h3>{project.title}</h3>
             <p>{project.description}</p>
           </ProjectItem>
