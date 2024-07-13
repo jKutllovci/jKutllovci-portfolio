@@ -1,8 +1,20 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useState, useRef } from 'react';
+import styled, { keyframes, css } from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+
+// Keyframes for animations
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 const SkillsSection = styled.section`
   padding: 40px 0;
@@ -14,6 +26,12 @@ const SkillsSection = styled.section`
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   max-width: 1200px;
   margin: 0 auto;
+  opacity: 0; /* Initially hidden */
+  ${({ isVisible }) =>
+    isVisible &&
+    css`
+      animation: ${fadeInUp} 1s ease-out forwards; /* Slide-in animation applied */
+    `}
 `;
 
 const BackgroundEffect = styled.div`
@@ -37,6 +55,13 @@ const SkillItem = styled.div`
   padding-bottom: 20px;
   border-radius: 10px;
   margin-bottom: 20px;
+  opacity: 0; /* Initially hidden */
+  transform: translateY(20px);
+  ${({ isVisible }) =>
+    isVisible &&
+    css`
+      animation: ${fadeInUp} 0.5s ease-out forwards; /* Slide-in animation applied */
+    `}
 
   img {
     width: 200px;
@@ -114,6 +139,30 @@ const skills = [
 ];
 
 const Skills = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const skillsSectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsVisible(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (skillsSectionRef.current) {
+      observer.observe(skillsSectionRef.current);
+    }
+
+    return () => {
+      if (skillsSectionRef.current) {
+        observer.unobserve(skillsSectionRef.current);
+      }
+    };
+  }, []);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -128,32 +177,32 @@ const Skills = () => {
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
-        }
+        },
       },
       {
         breakpoint: 600,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
-        }
+        },
       },
       {
         breakpoint: 480,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-        }
-      }
-    ]
+        },
+      },
+    ],
   };
 
   return (
-    <SkillsSection id="skills">
+    <SkillsSection id="skills" ref={skillsSectionRef} isVisible={isVisible}>
       <BackgroundEffect />
       <h2>Skills</h2>
       <CustomSlider {...settings}>
         {skills.map((skill, index) => (
-          <SkillItem key={index}>
+          <SkillItem key={index} isVisible={isVisible}>
             <img src={require(`../images/skills/${skill.image}`)} alt={skill.name} />
             <p>{skill.name}</p>
           </SkillItem>

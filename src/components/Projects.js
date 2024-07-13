@@ -1,80 +1,74 @@
-import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import React, { useState, useEffect, useRef } from 'react';
+import styled, { keyframes, css } from 'styled-components';
+
+// Keyframes for animations
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 const ProjectsSection = styled.section`
-  padding: 40px 0;
+  padding: 60px 20px;
   text-align: center;
-  background-color: #2f9f84; /* Updated background color */
+  background-color: #2f9f84;
   border-radius: 15px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Box shadow for depth */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(20px);
+  ${({ isVisible }) =>
+    isVisible &&
+    css`
+      animation: ${fadeInUp} 0.5s ease-out forwards;
+    `}
 
   @media (max-width: 768px) {
-    padding: 20px 0; /* Reduce padding for smaller screens */
+    padding: 40px 10px;
   }
 `;
 
 const ProjectList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 30px; /* Gap between project items */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
 
   @media (max-width: 768px) {
-    flex-direction: column; /* Stack items vertically on smaller screens */
-    align-items: center; /* Center items vertically */
-  }
-`;
-
-const floatAnimation = keyframes`
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0);
+    grid-template-columns: 1fr;
   }
 `;
 
 const ProjectItem = styled.div`
-  width: 300px;
-  background-color: #272b29; /* Dark background color for project items */
+  background-color: #272b29;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Box shadow for each project item */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  margin-bottom: 30px; /* Space between items */
-  animation: ${floatAnimation} 3s ease infinite;
-  animation-delay: ${({ delay }) => `${delay}s`}; /* Staggered animation delay */
+  opacity: 0;
+  transform: translateY(20px);
+  ${({ isVisible }) =>
+    isVisible &&
+    css`
+      animation: ${fadeInUp} 0.5s ease-out forwards;
+    `}
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Increase shadow on hover */
-  }
-
-  &:hover ~ div {
-    transform: translateX(20px);
-  }
-
-  &:hover ~ div:hover {
-    transform: translateX(0);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   }
 
   h3 {
     margin-bottom: 10px;
     font-size: 1.5em;
-    color: #ffffff; /* Title color */
+    color: #ffffff;
   }
 
   p {
-    color: #c5c6c7; /* Description color */
-  }
-
-  @media (max-width: 768px) {
-    width: calc(100% - 40px); /* Full width minus padding for better spacing */
-    max-width: 100%; /* Maximum width on smaller screens */
-    margin-bottom: 30px; /* Space between items */
+    color: #c5c6c7;
   }
 `;
 
@@ -85,6 +79,8 @@ const Projects = () => {
     { title: 'Kvik Booking', description: 'A booking application built with HTML, Bootstrap, CSS, JavaScript, and PHP.' },
     // Add more manual projects as needed
   ]);
+  const [isVisible, setIsVisible] = useState(false);
+  const projectSectionRef = useRef(null);
 
   useEffect(() => {
     // Fetch GitHub repositories dynamically
@@ -93,7 +89,7 @@ const Projects = () => {
         const response = await fetch('https://api.github.com/users/jKutllovci/repos');
         if (response.ok) {
           const data = await response.json();
-          setGithubProjects(data); // Update state with fetched repositories
+          setGithubProjects(data);
         } else {
           throw new Error('Failed to fetch repositories');
         }
@@ -105,13 +101,34 @@ const Projects = () => {
     fetchProjects();
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsVisible(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (projectSectionRef.current) {
+      observer.observe(projectSectionRef.current);
+    }
+
+    return () => {
+      if (projectSectionRef.current) {
+        observer.unobserve(projectSectionRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <ProjectsSection id="projects">
+    <ProjectsSection id="projects" ref={projectSectionRef} isVisible={isVisible}>
       <h2>Projects</h2>
       <ProjectList>
         {/* Render GitHub projects */}
         {githubProjects.map((project, index) => (
-          <ProjectItem key={`github-${index}`} delay={index * 0.2}>
+          <ProjectItem key={`github-${index}`} isVisible={isVisible}>
             <a href={project.html_url} target="_blank" rel="noopener noreferrer">
               <h3>{project.name}</h3>
             </a>
@@ -121,7 +138,7 @@ const Projects = () => {
 
         {/* Render manual projects */}
         {manualProjects.map((project, index) => (
-          <ProjectItem key={`manual-${index}`} delay={index * 0.2}>
+          <ProjectItem key={`manual-${index}`} isVisible={isVisible}>
             <h3>{project.title}</h3>
             <p>{project.description}</p>
           </ProjectItem>

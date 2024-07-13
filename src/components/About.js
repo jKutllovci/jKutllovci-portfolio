@@ -1,12 +1,12 @@
-import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import React, { useEffect, useState, useRef } from 'react';
+import styled, { keyframes, css } from 'styled-components';
 import profilePic from '../images/profile.jpg';
 
 // Keyframes for animations
 const fadeIn = keyframes`
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(50px); /* Slide from bottom */
   }
   to {
     opacity: 1;
@@ -34,7 +34,12 @@ const AboutSection = styled.section`
   background-color: #272B29;
   border-radius: 15px;
   box-shadow: 0 8px 16px rgba(255, 255, 255, 0.1); /* White shadow effect */
-  animation: ${fadeIn} 0.5s ease-out; /* Fade-in animation applied */
+  opacity: 0; /* Initially hidden */
+  ${({ isVisible }) =>
+    isVisible &&
+    css`
+      animation: ${fadeIn} 1s ease-out forwards; /* Slide-in animation applied */
+    `}
 
   @media (max-width: 768px) {
     padding: 40px 10px; /* Adjust padding for smaller screens */
@@ -57,7 +62,8 @@ const ProfileContainer = styled.div`
 
 const ProfileImage = styled.img`
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover; /* Ensure the image covers the entire container */
   border-radius: 50%;
 `;
 
@@ -65,7 +71,12 @@ const AboutText = styled.div`
   text-align: center;
   color: #ffffff; /* Text color */
   margin-top: 40px;
-  animation: ${textAnimation} 1s ease-out; /* Animation applied */
+  opacity: 0; /* Initially hidden */
+  ${({ isVisible }) =>
+    isVisible &&
+    css`
+      animation: ${textAnimation} 1.5s ease-out forwards; /* Animation applied */
+    `}
 
   h2 {
     font-size: 2.5em;
@@ -89,18 +100,44 @@ const AboutText = styled.div`
   }
 `;
 
-const About = () => (
-  <AboutSection id="about">
-    <ProfileContainer>
-      <ProfileImage src={profilePic} alt="Profile" />
-    </ProfileContainer>
-    <AboutText>
-      <h2>About Me</h2>
-      <p>
-        I'm a skilled developer with a degree in Web & Mobile Computing from Rochester Institute of Technology, Croatia. I am planning to expand my knowledge and put my skills to good use.
-      </p>
-    </AboutText>
-  </AboutSection>
-);
+const About = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const aboutSectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsVisible(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (aboutSectionRef.current) {
+      observer.observe(aboutSectionRef.current);
+    }
+
+    return () => {
+      if (aboutSectionRef.current) {
+        observer.unobserve(aboutSectionRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <AboutSection id="about" ref={aboutSectionRef} isVisible={isVisible}>
+      <ProfileContainer>
+        <ProfileImage src={profilePic} alt="Profile" />
+      </ProfileContainer>
+      <AboutText isVisible={isVisible}>
+        <h2>About Me</h2>
+        <p>
+          I'm a skilled developer with a degree in Web & Mobile Computing from Rochester Institute of Technology, Croatia. I am planning to expand my knowledge and put my skills to good use.
+        </p>
+      </AboutText>
+    </AboutSection>
+  );
+};
 
 export default About;
