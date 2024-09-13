@@ -285,17 +285,27 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const currentDate = new Date().toLocaleString(); // Get the current date and time
+    
+    // Capture the current date and time in a human-readable format
+    const currentDate = new Date().toLocaleString();
+    
     try {
-      const newMessageRef = push(ref(database, 'messages'));
-      await set(newMessageRef, { ...formData, date: currentDate }); // Add the date to the message data
+      const newMessageRef = push(ref(database, 'messages')); // Create a reference to store the message
+      await set(newMessageRef, { 
+        ...formData,          // Existing form data
+        date: currentDate     // Add the current date to the data
+      });
+      
+      // Reset form and display feedback
       setFeedback({ message: 'Message sent successfully!', success: true });
-      setFormData({ name: '', email: '', message: '', rating: 0 });
+      setFormData({ name: '', email: '', message: '', rating: 0 });  // Reset the form fields
+      
     } catch (error) {
       console.error('There was an error sending the message:', error);
       setFeedback({ message: 'There was an error sending your message. Please try again.', success: false });
     }
   };
+  
   
 
   const onDownloadCV = () => {
