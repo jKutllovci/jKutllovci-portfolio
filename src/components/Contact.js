@@ -285,9 +285,10 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const currentDate = new Date().toLocaleString(); // Get the current date and time
     try {
       const newMessageRef = push(ref(database, 'messages'));
-      await set(newMessageRef, formData);
+      await set(newMessageRef, { ...formData, date: currentDate }); // Add the date to the message data
       setFeedback({ message: 'Message sent successfully!', success: true });
       setFormData({ name: '', email: '', message: '', rating: 0 });
     } catch (error) {
@@ -295,6 +296,7 @@ const Contact = () => {
       setFeedback({ message: 'There was an error sending your message. Please try again.', success: false });
     }
   };
+  
 
   const onDownloadCV = () => {
     fetch(require('../cv/JKCV.pdf')).then((response) => {
