@@ -368,24 +368,15 @@ const Contact = () => {
           <a href="https://www.linkedin.com/in/jon-kutllovci-11245222b/" target="_blank" rel="noopener noreferrer">
             <FaLinkedin />
           </a>
-          <a href="https://www.instagram.com/jonkutllovci/" target="_blank" rel="noopener noreferrer">
-            <FaInstagram />
-          </a>
-          <a href="https://www.facebook.com/jonkutllovcii/" target="_blank" rel="noopener noreferrer">
-            <FaFacebook />
-          </a>
-          <a href="https://www.youtube.com/channel/UC2x3DmyB1Pd2pLFsOgV4GTw" target="_blank" rel="noopener noreferrer">
-            <FaYoutube />
-          </a>
+       
+       
           <a href="https://github.com/jKutllovci/" target="_blank" rel="noopener noreferrer">
             <FaGithub />
           </a>
           <a href="mailto:jon.kutllovci@gmail.com">
             <FaEnvelope />
           </a>
-          <a href="tel:+38348383837">
-            <FaPhone />
-          </a>
+     
         </SocialIcons>
       </ContactSection>
       <CVSection>
