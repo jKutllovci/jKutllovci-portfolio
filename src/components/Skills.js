@@ -152,13 +152,14 @@ const Skills = () => {
       { threshold: 0.1 }
     );
 
-    if (skillsSectionRef.current) {
-      observer.observe(skillsSectionRef.current);
+    const currentRef = skillsSectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (skillsSectionRef.current) {
-        observer.unobserve(skillsSectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);

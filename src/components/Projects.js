@@ -111,13 +111,14 @@ const Projects = () => {
       { threshold: 0.1 }
     );
 
-    if (projectSectionRef.current) {
-      observer.observe(projectSectionRef.current);
+    const currentRef = projectSectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (projectSectionRef.current) {
-        observer.unobserve(projectSectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);

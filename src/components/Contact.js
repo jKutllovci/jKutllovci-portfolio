@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled, { keyframes, css } from 'styled-components';
-import { FaLinkedin, FaInstagram, FaFacebook, FaYoutube, FaEnvelope, FaGithub, FaPhone } from 'react-icons/fa';
+import { FaLinkedin, FaEnvelope, FaGithub } from 'react-icons/fa';
 import ReactStars from 'react-stars';
 import { database } from '../config/firebaseConfig';
 import { ref, push, set } from 'firebase/database';
@@ -263,13 +263,14 @@ const Contact = () => {
       { threshold: 0.1 }
     );
 
-    if (contactSectionRef.current) {
-      observer.observe(contactSectionRef.current);
+    const currentRef = contactSectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (contactSectionRef.current) {
-        observer.unobserve(contactSectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);

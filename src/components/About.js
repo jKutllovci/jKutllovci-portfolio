@@ -114,13 +114,14 @@ const About = () => {
       { threshold: 0.1 }
     );
 
-    if (aboutSectionRef.current) {
-      observer.observe(aboutSectionRef.current);
+    const currentRef = aboutSectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (aboutSectionRef.current) {
-        observer.unobserve(aboutSectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
